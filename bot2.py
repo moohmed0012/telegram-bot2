@@ -30,7 +30,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     state = user_data_store[user_id]["state"]
 
     if state == "choosing_group":
-        if text in ["Group A", "Group B", "Group C", "Group D", "Group E"]:
+        if text in ["Group A1", "Group A3"]:
             user_data_store[user_id]["group"] = text
             user_data_store[user_id]["state"] = "waiting_for_name"
             await update.message.reply_text("اكتب اسمك الثلاثي:")
