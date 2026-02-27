@@ -1,15 +1,18 @@
 import datetime
-import asyncio
+import os  
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-TOKEN = "8627765667:AAHyEKOynIYkeFg0iFSSwRHh51lY_DmeD2g"
+
+TOKEN = os.getenv "8627765667:AAHyEKOynIYkeFg0iFSSwRHh51lY_DmeD2g"  # 
+
 ADMIN_IDS = [5894877058, 77098280]
 
 groups = [
-    ["Group A1", "Group A2"],
-    
+    ["Group A1", "Group A2"]
 ]
+
+valid_groups = [g for row in groups for g in row]  # flatten
 
 user_data_store = {}
 submissions = {}
@@ -30,7 +33,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     state = user_data_store[user_id]["state"]
 
     if state == "choosing_group":
-        if text in ["Group A1", "Group A3"]:
+        if text in valid_groups:   
             user_data_store[user_id]["group"] = text
             user_data_store[user_id]["state"] = "waiting_for_name"
             await update.message.reply_text("اكتب اسمك الثلاثي:")
@@ -40,7 +43,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif state == "waiting_for_name":
         user_data_store[user_id]["name"] = text
         user_data_store[user_id]["state"] = "waiting_for_file"
-        await update.message.reply_text("الآن أرسل مشروعك كملف (PDF أو ZIP).")
+        await update.message.reply_text("الآن أرسل مشروعك كملف (PDF أو ZIP أو RAR).")
 
 async def receive_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
